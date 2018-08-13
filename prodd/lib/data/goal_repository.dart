@@ -12,10 +12,11 @@ class GoalRepository {
   final _uid;
 
   Stream<List<Goal>> goalStream() {
-    return Firestore.instance.collection("users").document(_uid).collection("goals").snapshots().map((qs) {
-      qs.documents.where((d) => d.exists).map((d) {
-        return Goal(title: d.data["title"], completeBy: d.data["completeBy"]);
-      });
+    return _db.collection("users").document(_uid).collection("goals").snapshots().map<List<Goal>>((qs) {
+       return qs.documents.map((d) { 
+        final goal = Goal(title: d.data["title"], completeBy: d.data["completeBy"]);
+        return goal;
+      }).toList();
     });
   }
 }

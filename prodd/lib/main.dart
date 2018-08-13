@@ -22,11 +22,11 @@ class MyApp extends StatelessWidget {
 class GoalList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    var repo = GoalRepository();
+    var repo = GoalRepository(); 
     return StreamBuilder<List<Goal>>(
       stream: repo.goalStream(),
       builder: (context, snapshot) {
-        if (!snapshot.hasData) return const Text('Loading...');
+        if (!snapshot.hasData) return const Text('Loading...'); 
         return ListView.builder(
           itemCount: snapshot.data.length,
           itemBuilder: (_, i) {
