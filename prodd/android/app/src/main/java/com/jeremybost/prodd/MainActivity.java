@@ -1,4 +1,4 @@
-package com.example.prodd;
+package com.jeremybost.prodd;
 
 import android.os.Bundle;
 import io.flutter.app.FlutterActivity;

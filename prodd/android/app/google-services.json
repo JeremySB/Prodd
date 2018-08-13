@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "808289278045",
+    "firebase_url": "https://proddapp.firebaseio.com",
+    "project_id": "proddapp",
+    "storage_bucket": "proddapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:808289278045:android:94675023099f6461",
+        "android_client_info": {
+          "package_name": "com.jeremybost.prodd"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "808289278045-nkqdjldsff4ldrffmcvfl71jso8kmil0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBZFkiDptaXU5mSBhbYI2naUPmcckxjelk"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

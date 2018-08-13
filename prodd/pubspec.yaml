@@ -1,5 +1,5 @@
 name: prodd
-description: A new Flutter project.
+description: A Flutter todo app focusing on reminding you to complete your goals.
 
 dependencies:
   flutter:
@@ -8,6 +8,8 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.2
+  #firebase_analytics: ^1.0.2
+  cloud_firestore: ^0.7.4
 
 dev_dependencies:
   flutter_test:
