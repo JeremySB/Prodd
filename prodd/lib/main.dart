@@ -13,7 +13,13 @@ class MyApp extends StatelessWidget {
         appBar: AppBar(
           title: Text('Goals'),
         ),
-        body: GoalList()
+        body: GoalList(),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            final goal = Goal(title: "New goal from button", completeBy: DateTime.now());
+            GoalRepository().saveGoal(goal);
+          }
+        ),
       ),
     );
   }
