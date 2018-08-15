@@ -1,60 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:prodd/data/goal_repository.dart';
-import 'package:prodd/models/goal.dart';
+import 'package:prodd/routes.dart';
+import 'package:prodd/screens/goals/add_edit_goal_screen.dart';
+import 'package:prodd/screens/goals/goal_screen.dart';
 
 void main() => runApp(MyApp());
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  GoalRepository _goalRepo = GoalRepository();
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Prodd',
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text('Goals'),
-        ),
-        body: GoalList(),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            final goal = Goal(title: "New goal from button", completeBy: DateTime.now());
-            GoalRepository().saveGoal(goal);
-          }
-        ),
-      ),
+      routes: {
+        AppRoutes.goals: (context) => GoalScreen(goalRepo: _goalRepo),
+        AppRoutes.goalAddEdit: (context) => AddEditGoalScreen(goalRepo: _goalRepo)
+      },
+      initialRoute: AppRoutes.goals,
     );
   }
-}
-
-class GoalList extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    var repo = GoalRepository(); 
-    return StreamBuilder<List<Goal>>(
-      stream: repo.goalStream(),
-      builder: (context, snapshot) {
-        if (!snapshot.hasData) return const Text('Loading...'); 
-        return ListView.builder(
-          itemCount: snapshot.data.length,
-          itemBuilder: (_, i) {
-            return GoalItem(goal: snapshot.data[i]);
-          },
-        );
-      }
-    );
-  }
-}
-
-class GoalItem extends StatelessWidget {
-  GoalItem({this.goal});
-
-  final Goal goal;
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      title: Text(goal.title),
-      leading: Icon(Icons.inbox),
-    );
-  }
-
 }
