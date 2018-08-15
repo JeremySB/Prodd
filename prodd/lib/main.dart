@@ -4,7 +4,12 @@ import 'package:prodd/routes.dart';
 import 'package:prodd/screens/goals/add_edit_goal_screen.dart';
 import 'package:prodd/screens/goals/goal_screen.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  // hopefully can remove this later
+  MaterialPageRoute.debugEnableFadingRoutes = true;
+
+  runApp(MyApp());
+}
 
 class MyApp extends StatefulWidget {
   @override
