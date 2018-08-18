@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:prodd/data/goal_repository.dart';
 import 'package:prodd/models/goal.dart';
+import 'package:prodd/widgets/date_time_picker.dart';
 
 class AddEditGoalScreen extends StatefulWidget {
   AddEditGoalScreen({this.goal, this.goalRepo});
@@ -33,6 +34,7 @@ class AddEditGoalScreenState extends State<AddEditGoalScreen> {
           child: ListView(
             padding: EdgeInsets.all(8.0),
             children: <Widget>[
+              // title field
               TextFormField(
                 initialValue: goal?.title,
                 textCapitalization: TextCapitalization.sentences,
@@ -42,6 +44,10 @@ class AddEditGoalScreenState extends State<AddEditGoalScreen> {
                 ),
                 validator: (val) => val.trim().isEmpty ? "Cannot be empty" : null,
                 onSaved: (val) => goal.title = val.trim(),
+              ),
+
+              DateTimePicker(
+                onSaved: (val) => goal.completeBy = val != null ? val : goal.completeBy
               )
             ],
           ),
