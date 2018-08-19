@@ -34,7 +34,6 @@ class AddEditGoalScreenState extends State<AddEditGoalScreen> {
         child: Form(
           key: _formKey,
           child: ListView(
-            padding: EdgeInsets.all(8.0),
             children: <Widget>[
               // title field
               ListTile(
@@ -78,7 +77,8 @@ class AddEditGoalScreenState extends State<AddEditGoalScreen> {
                       }
                       
                       state.didChange(DateTime(date.year, date.month, date.day, time.hour, time.minute));
-                    }
+                    },
+                    onLongPress: () => state.didChange(null),
                   );
                 }
               )
@@ -88,7 +88,7 @@ class AddEditGoalScreenState extends State<AddEditGoalScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.save),
+        child: Icon(Icons.send),
         onPressed: () {
           if(_formKey.currentState.validate()) {
             _formKey.currentState.save();

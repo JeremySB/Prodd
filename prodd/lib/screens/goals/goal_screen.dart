@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:intl/intl.dart';
 import 'package:prodd/data/goal_repository.dart';
 import 'package:prodd/models/goal.dart';
 import 'package:prodd/routes.dart';
@@ -14,7 +15,7 @@ class GoalScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Prodd: Goals'),
+        title: Text('Active Goals'),
       ),
       body: GoalList(goalRepo: goalRepo),
       floatingActionButton: FloatingActionButton(
@@ -35,9 +36,9 @@ class GoalList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<List<Goal>>(
-      stream: goalRepo.goalStream(),
+      stream: goalRepo.activeGoalStream(),
       builder: (context, snapshot) {
-        if (!snapshot.hasData) return const Text('Loading...'); 
+        if (!snapshot.hasData) return const Center(child: const Text('Loading...')); 
         return ListView.builder(
           itemCount: snapshot.data.length,
           itemBuilder: (_, i) {
@@ -59,7 +60,15 @@ class _GoalItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       title: Text(goal.title),
-      leading: Icon(Icons.inbox),
+      subtitle: goal.completeBy != null ? Text(DateFormat().add_yMEd().add_jm().format(goal.completeBy)) : null,
+      leading: GestureDetector(
+        child: Icon(Icons.check_box_outline_blank),
+        onTap: () {
+          goal.status = GoalStatus.completed;
+          goalRepo.saveGoal(goal);
+        },
+      ),
+      //trailing: Text(goal.status.toString()),
       onTap: () => Navigator.of(context).push(MaterialPageRoute(
         builder: (context) => AddEditGoalScreen(goal: goal, goalRepo: goalRepo,)
       )),
