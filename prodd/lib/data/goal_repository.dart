@@ -16,11 +16,14 @@ class GoalRepository {
 
   static const _usersCollection = "users";
   static const _goalsCollection = "goals";
+  
+  static const _titleField = "title";
+  static const _completeByField = "completeBy";
 
   Stream<List<Goal>> goalStream() {
     return _userdoc.collection(_goalsCollection).snapshots().map<List<Goal>>((qs) {
        return qs.documents.map((d) {
-        final goal = Goal(title: d.data["title"], completeBy: d.data["completeBy"]);
+        final goal = Goal(id: d.documentID, title: d.data[_titleField], completeBy: d.data[_completeByField]);
         return goal;
       }).toList();
     });
@@ -30,8 +33,8 @@ class GoalRepository {
   Future<void> saveGoal(Goal goal) {
     final goalRef = _userdoc.collection(_goalsCollection).document(goal.id);
     final data = <String, dynamic>{
-      "title": goal.title,
-      "completedBy": goal.completeBy
+      _titleField: goal.title,
+      _completeByField: goal.completeBy
     };
     return goalRef.setData(data, merge: false);
   }

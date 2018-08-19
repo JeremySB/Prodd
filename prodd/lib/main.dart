@@ -33,6 +33,10 @@ class _MyAppState extends State<MyApp> {
         AppRoutes.goalAddEdit: (context) => AddEditGoalScreen(goalRepo: _goalRepo)
       },
       initialRoute: AppRoutes.goals,
+      color: Colors.orange[350],
+      theme: ThemeData(
+        primarySwatch: Colors.deepPurple,
+      ),
     );
   }
 }
