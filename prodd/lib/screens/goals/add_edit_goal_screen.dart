@@ -1,3 +1,4 @@
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
@@ -93,6 +94,9 @@ class AddEditGoalScreenState extends State<AddEditGoalScreen> {
             _formKey.currentState.save();
             widget.goalRepo.saveGoal(goal);
             Navigator.of(context).pop();
+          }
+          else {
+            FirebaseAnalytics().logEvent(name: "goal_validation_failed");
           }
         }
       )
