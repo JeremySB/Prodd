@@ -23,6 +23,7 @@ class GoalRepository {
   static const _titleField = "title";
   static const _completeByField = "completeBy";
   static const _statusField = "status";
+  static const _estimatedDurationField = "estimatedDuration";
 
   /// Returns a [Stream] of every [Goal] for user.
   Stream<List<Goal>> goalStream() {
@@ -44,7 +45,8 @@ class GoalRepository {
     final data = <String, dynamic>{
       _titleField: goal.title,
       _completeByField: goal.completeBy,
-      _statusField: goal.status?.index ?? GoalStatus.active.index
+      _statusField: goal.status?.index ?? GoalStatus.active.index,
+      _estimatedDurationField: goal.estimatedDuration?.inMinutes
     };
     return goalRef.setData(data, merge: false);
   }
@@ -56,7 +58,8 @@ class GoalRepository {
           id: d.documentID,
           title: d.data[_titleField], 
           completeBy: d.data[_completeByField],
-          status: d.data[_statusField] != null ? GoalStatus.values[ d.data[_statusField] ] : null
+          status: d.data[_statusField] != null ? GoalStatus.values[ d.data[_statusField] ] : null,
+          estimatedDuration: d.data[_estimatedDurationField] != null ? Duration(minutes: d.data[_estimatedDurationField]) : null,
         );
         return goal;
       } catch (e) {

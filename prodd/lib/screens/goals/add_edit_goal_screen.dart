@@ -52,7 +52,7 @@ class AddEditGoalScreenState extends State<AddEditGoalScreen> {
               // due date / complete by field
               FormField<DateTime>(
                 initialValue: goal.completeBy,
-                onSaved: (val) => goal.completeBy = val ?? goal.completeBy,
+                onSaved: (val) => goal.completeBy = val,
                 builder: (state) {
                   return ListTile(
                     leading: Icon(Icons.date_range),
@@ -81,7 +81,26 @@ class AddEditGoalScreenState extends State<AddEditGoalScreen> {
                     onLongPress: () => state.didChange(null),
                   );
                 }
-              )
+              ),
+
+              // estimated duration
+              ListTile(
+                leading: Icon(Icons.timelapse),
+                title: TextFormField(
+                  initialValue: goal?.estimatedDuration?.inMinutes?.toString(),
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration(
+                    hintText: "Estimated duration (minutes)"
+                  ),
+                  validator: (val) {
+                    if(val.isNotEmpty && int.tryParse(val) == null) {
+                      return "Not a valid number";
+                    }
+                    return null;
+                  },
+                  onSaved: (val) => goal.estimatedDuration = int.tryParse(val) != null ? Duration(minutes: int.parse(val)) : null,
+                ),
+              ),
               
             ],
           ),
@@ -96,7 +115,7 @@ class AddEditGoalScreenState extends State<AddEditGoalScreen> {
             Navigator.of(context).pop();
           }
           else {
-            FirebaseAnalytics().logEvent(name: "goal_validation_failed");
+            FirebaseAnalytics().logEvent(name: "goal_validation_failed", parameters: {"goal": goal, "to_string": _formKey.currentWidget.toStringDeep()});
           }
         }
       )
