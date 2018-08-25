@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:prodd/data/goal_repository.dart';
+import 'package:prodd/models/change.dart';
 import 'package:prodd/models/goal.dart';
 import 'package:prodd/routes.dart';
 import 'package:prodd/screens/goals/add_edit_goal_screen.dart';
@@ -28,24 +29,56 @@ class GoalScreen extends StatelessWidget {
   }
 }
 
-class GoalList extends StatelessWidget {
+class GoalList extends StatefulWidget {
   GoalList({this.goalRepo});
 
   final GoalRepository goalRepo;
 
   @override
+  State<StatefulWidget> createState() => _GoalListState();
+}
+
+class _GoalListState extends State<GoalList> {
+
+  final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
+  List<Goal> goals = List();
+
+  @override
+  void initState() {
+    super.initState();
+
+    widget.goalRepo.activeGoalChangesStream().listen((List<Change<Goal>> changes) {
+      changes.forEach((change) {
+        switch (change.type) {
+          case ChangeType.added:
+            goals.insert(change.newIndex, change.data);
+            _listKey.currentState.insertItem(change.newIndex);
+            break;
+          case ChangeType.modified:
+            goals.removeAt(change.oldIndex);
+            goals.insert(change.newIndex, change.data);
+            break;
+          case ChangeType.removed:
+            goals.removeAt(change.oldIndex);
+            _listKey.currentState.removeItem(change.oldIndex, (context, animation) {
+              return Text("bye");
+            });
+            break;
+        }
+      });
+      setState(() {
+        
+      });
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return StreamBuilder<List<Goal>>(
-      stream: goalRepo.activeGoalStream(),
-      builder: (context, snapshot) {
-        if (!snapshot.hasData) return const Center(child: const Text('Loading...')); 
-        return ListView.builder(
-          itemCount: snapshot.data.length,
-          itemBuilder: (_, i) {
-            return _GoalItem(goal: snapshot.data[i], goalRepo: goalRepo,);
-          },
-        );
-      }
+    return AnimatedList(
+      key: _listKey,
+      itemBuilder: (context, i, animation) {
+        return _GoalItem(goal: goals[i], goalRepo: widget.goalRepo);
+      },
     );
   }
 }
@@ -61,9 +94,9 @@ class _GoalItem extends StatelessWidget {
     return ListTile(
       title: Text(goal.title),
       subtitle: goal.completeBy != null ? Text(DateFormat().add_yMEd().add_jm().format(goal.completeBy)) : null,
-      leading: GestureDetector(
-        child: Icon(Icons.check_box_outline_blank),
-        onTap: () {
+      leading: IconButton(
+        icon: Icon(Icons.check_box_outline_blank),
+        onPressed: () {
           goal.status = GoalStatus.completed;
           goalRepo.saveGoal(goal);
         },
