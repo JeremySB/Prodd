@@ -7,12 +7,13 @@ class Goal extends Entity {
       this.title, 
       this.completeBy, 
       this.status,
-      this.estimatedDuration
+      this.estimatedDuration,
+      this.beginNotifications
     }) 
     : super(id);
 
   String title;
-  DateTime completeBy;
+  DateTime completeBy, beginNotifications;
   GoalStatus status;
   Duration estimatedDuration;
   

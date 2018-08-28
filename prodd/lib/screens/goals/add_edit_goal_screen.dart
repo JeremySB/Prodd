@@ -102,6 +102,31 @@ class AddEditGoalScreenState extends State<AddEditGoalScreen> {
                 ),
               ),
               
+              // when to start notifying
+              FormField<DateTime>(
+                initialValue: goal.beginNotifications,
+                onSaved: (val) => goal.beginNotifications = val,
+                builder: (state) {
+                  return ListTile(
+                    leading: Icon(Icons.play_arrow),
+                    title: Text("Begin notifications date (\"prodding\")"),
+                    subtitle: Text(state.value != null ? DateFormat().add_yMEd().format(state.value) : "Automatic"),
+                    onTap: () async {
+                      final date = await showDatePicker(
+                        context: context, 
+                        firstDate: DateTime(2015), 
+                        initialDate: state.value ?? DateTime.now(), 
+                        lastDate: DateTime(2100)
+                      );
+                      if(date == null) return;
+                      
+                      
+                      state.didChange(DateTime(date.year, date.month, date.day));
+                    },
+                    onLongPress: () => state.didChange(null),
+                  );
+                }
+              ),
             ],
           ),
         ),
