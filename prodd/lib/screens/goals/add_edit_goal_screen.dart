@@ -58,6 +58,10 @@ class AddEditGoalScreenState extends State<AddEditGoalScreen> {
                     leading: Icon(Icons.date_range),
                     title: Text("Due date"),
                     subtitle: Text(state.value != null ? DateFormat().add_yMEd().add_jm().format(state.value) : "No date selected"),
+                    trailing: GestureDetector(
+                      child: Icon(Icons.cancel, semanticLabel: "Cancel"),
+                      onTap: () => state.didChange(null),
+                    ),
                     onTap: () async {
                       final date = await showDatePicker(
                         context: context, 
@@ -78,7 +82,7 @@ class AddEditGoalScreenState extends State<AddEditGoalScreen> {
                       
                       state.didChange(DateTime(date.year, date.month, date.day, time.hour, time.minute));
                     },
-                    onLongPress: () => state.didChange(null),
+                    //onLongPress: () => state.didChange(null),
                   );
                 }
               ),
@@ -109,8 +113,12 @@ class AddEditGoalScreenState extends State<AddEditGoalScreen> {
                 builder: (state) {
                   return ListTile(
                     leading: Icon(Icons.play_arrow),
-                    title: Text("Begin notifications date (\"prodding\")"),
+                    title: Text("Start notifying date"),
                     subtitle: Text(state.value != null ? DateFormat().add_yMEd().format(state.value) : "Automatic"),
+                    trailing: GestureDetector(
+                      child: Icon(Icons.cancel, semanticLabel: "Cancel",),
+                      onTap: () => state.didChange(null),
+                    ),
                     onTap: () async {
                       final date = await showDatePicker(
                         context: context, 
@@ -123,9 +131,18 @@ class AddEditGoalScreenState extends State<AddEditGoalScreen> {
                       
                       state.didChange(DateTime(date.year, date.month, date.day));
                     },
-                    onLongPress: () => state.didChange(null),
+                    //onLongPress: () => state.didChange(null),
                   );
                 }
+              ),
+
+              // notification frequency
+              ListTile(
+                leading: Icon(Icons.repeat),
+                title: Text("Notification frequency"),
+                onTap: () {
+                  
+                },
               ),
             ],
           ),
