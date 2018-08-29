@@ -73,7 +73,7 @@ class _GoalListState extends State<GoalList> {
                   scale: animation,
                   child: _GoalItem(goal: removedGoals[i], removing: true)
                 );
-              }, duration: Duration(milliseconds: 400));
+              }, duration: Duration(milliseconds: 300));
               break;
           }
         });
@@ -93,7 +93,10 @@ class _GoalListState extends State<GoalList> {
       key: _listKey,
       initialItemCount: goals.length,
       itemBuilder: (context, i, animation) {
-        return _GoalItem(goal: goals[i], goalRepo: widget.goalRepo);
+        return ScaleTransition(
+          scale: animation,
+          child: _GoalItem(goal: goals[i], goalRepo: widget.goalRepo)
+        );
       },
     );
   }
@@ -107,9 +110,22 @@ class _GoalItem extends StatelessWidget {
   final GoalRepository goalRepo;
   final bool removing;
 
-  void _onComplete() {
+  void _onComplete(BuildContext context) {
+    final previousStatus = goal.status;
     goal.status = GoalStatus.completed;
     goalRepo?.saveGoal(goal);
+
+    // show snackbar
+    Scaffold.of(context).showSnackBar(SnackBar(
+      content: Text("Goal completed"),
+      action: SnackBarAction(
+        label: "Undo",
+        onPressed: () { 
+          goal.status = previousStatus;
+          goalRepo?.saveGoal(goal);
+        }
+      ),
+    ));
   }
 
   @override
@@ -119,7 +135,7 @@ class _GoalItem extends StatelessWidget {
       subtitle: goal.completeBy != null ? Text(DateFormat().add_yMEd().add_jm().format(goal.completeBy)) : null,
       leading: Checkbox(
         value: goal.status == GoalStatus.completed || removing,
-        onChanged: (val) => val ? _onComplete() : null
+        onChanged: (val) => val ? _onComplete(context) : null
       ),
       //trailing: Text(goal.status.toString()),
       onTap: () {
