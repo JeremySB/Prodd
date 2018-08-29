@@ -73,7 +73,7 @@ class _GoalListState extends State<GoalList> {
                   scale: animation,
                   child: _GoalItem(goal: removedGoals[i], removing: true)
                 );
-              }, duration: Duration(milliseconds: 200));
+              }, duration: Duration(milliseconds: 400));
               break;
           }
         });
@@ -117,9 +117,9 @@ class _GoalItem extends StatelessWidget {
     return ListTile(
       title: Text(goal.title),
       subtitle: goal.completeBy != null ? Text(DateFormat().add_yMEd().add_jm().format(goal.completeBy)) : null,
-      leading: IconButton(
-        icon: Icon(removing ? Icons.check_box : Icons.check_box_outline_blank),
-        onPressed: _onComplete,
+      leading: Checkbox(
+        value: goal.status == GoalStatus.completed || removing,
+        onChanged: (val) => val ? _onComplete() : null
       ),
       //trailing: Text(goal.status.toString()),
       onTap: () {
