@@ -1,6 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:prodd/data/goal_repository.dart';
 import 'package:prodd/routes.dart';
 import 'package:prodd/screens/goals/add_edit_goal_screen.dart';
@@ -22,7 +24,9 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  GoalRepository _goalRepo = GoalRepository();
+  final GoalRepository _goalRepo = GoalRepository();
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   @override
   void initState() {
@@ -47,4 +51,6 @@ class _MyAppState extends State<MyApp> {
       ],
     );
   }
+
+  
 }
