@@ -24,6 +24,7 @@ class GoalRepository {
   static const _titleField = "title",
                _completeByField = "completeBy",
                _statusField = "status",
+               _notificationFrequencyField = "notificationFrequency",
                _estimatedDurationField = "estimatedDuration", 
                _beginNotificationsField = "beginNotifications";
 
@@ -58,7 +59,8 @@ class GoalRepository {
       _completeByField: goal.completeBy,
       _statusField: goal.status?.index ?? GoalStatus.active.index,
       _estimatedDurationField: goal.estimatedDuration?.inMinutes,
-      _beginNotificationsField: goal.beginNotifications
+      _beginNotificationsField: goal.beginNotifications,
+      _notificationFrequencyField: goal.notificationFrequency?.index ?? GoalNotificationFrequency.none.index
     };
     return goalRef.setData(data, merge: false);
   }
@@ -86,7 +88,8 @@ class GoalRepository {
         completeBy: d.data[_completeByField],
         status: d.data[_statusField] != null ? GoalStatus.values[ d.data[_statusField] ] : null,
         estimatedDuration: d.data[_estimatedDurationField] != null ? Duration(minutes: d.data[_estimatedDurationField]) : null,
-        beginNotifications: d.data[_beginNotificationsField]
+        beginNotifications: d.data[_beginNotificationsField],
+        notificationFrequency: d.data[_notificationFrequencyField] != null ? GoalNotificationFrequency.values[d.data[_notificationFrequencyField]] : null
       );
       return goal;
     } catch (e) {

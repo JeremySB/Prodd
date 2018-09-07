@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
@@ -43,12 +45,12 @@ class _GoalListState extends State<GoalList> {
   List<Goal> goals = List(), removedGoals = List();
   final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
   bool _loading = true;
+  StreamSubscription _sub;
 
   @override
   void initState() {
     super.initState();
-
-    widget.goalRepo.activeGoalChangesStream().listen((List<Change<Goal>> changes) {
+    _sub = widget.goalRepo.activeGoalChangesStream().listen((List<Change<Goal>> changes) {
       if(_loading) {
         goals = changes.map((c) => c.data).toList();
         _loading = false;
@@ -70,10 +72,10 @@ class _GoalListState extends State<GoalList> {
               final i = removedGoals.length - 1;
               _listKey.currentState.removeItem(change.oldIndex, (context, animation) {
                 return ScaleTransition(
-                  scale: animation,
+                  scale: CurvedAnimation(parent: animation, curve: Interval(0.0, 0.3, curve: Curves.easeIn)),
                   child: _GoalItem(goal: removedGoals[i], removing: true)
                 );
-              }, duration: Duration(milliseconds: 300));
+              }, duration: Duration(milliseconds: 600));
               break;
           }
         });
@@ -82,6 +84,12 @@ class _GoalListState extends State<GoalList> {
       setState(() {
       });
     });
+  }
+
+  @override
+  void dispose() {
+    _sub.cancel();
+    super.dispose();
   }
 
   @override
@@ -131,6 +139,7 @@ class _GoalItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
+      key: Key(goal.id),
       title: Text(goal.title),
       subtitle: goal.completeBy != null ? Text(DateFormat().add_yMEd().add_jm().format(goal.completeBy)) : null,
       leading: Checkbox(

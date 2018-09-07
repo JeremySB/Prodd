@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:prodd/data/goal_repository.dart';
 import 'package:prodd/models/goal.dart';
+import 'package:prodd/widgets/expanded_dropdown_button.dart';
 
 class AddEditGoalScreen extends StatefulWidget {
   AddEditGoalScreen({this.goal, this.goalRepo});
@@ -137,13 +138,35 @@ class AddEditGoalScreenState extends State<AddEditGoalScreen> {
               ),
 
               // notification frequency
-              ListTile(
-                leading: Icon(Icons.repeat),
-                title: Text("Notification frequency"),
-                onTap: () {
-                  
-                },
-              ),
+              FormField<GoalNotificationFrequency>(
+                initialValue: goal.notificationFrequency,
+                onSaved: (val) => goal.notificationFrequency = val,
+                builder: (state) { 
+                  return ListTile(
+                    leading: Icon(Icons.notifications_none),
+                    title: ExpandedDropdownButton<GoalNotificationFrequency>(
+                      hint: Text("Notification frequency (default: daily)"),
+                      value: state.value == GoalNotificationFrequency.none ? null : state.value,
+                      items: [
+                        ExpandedDropdownMenuItem<GoalNotificationFrequency>(
+                          child: Text("Remind daily"),
+                          value: GoalNotificationFrequency.daily,
+                        ),
+                        ExpandedDropdownMenuItem<GoalNotificationFrequency>(
+                          child: Text("Remind every other day"),
+                          value: GoalNotificationFrequency.everyOtherDay,
+                        ),
+                        ExpandedDropdownMenuItem<GoalNotificationFrequency>(
+                          child: Text("Remind twice a day"),
+                          value: GoalNotificationFrequency.twiceADay,
+                        ),
+                      ],
+                      onChanged: (val) => state.didChange(val),
+                    ),
+                  );
+                }
+              )
+              
             ],
           ),
         ),
