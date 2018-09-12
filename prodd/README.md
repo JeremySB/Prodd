@@ -1,8 +1,4 @@
-# prodd
+# Prodd
 
-A new Flutter project.
+A todo app written in Flutter focusing on "prodding" the user into action with repeating reminders. Syncs between devices using Firebase.
 
-## Getting Started
-
-For help getting started with Flutter, view our online
-[documentation](https://flutter.io/).
