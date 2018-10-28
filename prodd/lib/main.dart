@@ -10,7 +10,7 @@ import 'package:prodd/screens/goals/goal_screen.dart';
 
 void main() {
   // hopefully can remove this later
-  MaterialPageRoute.debugEnableFadingRoutes = true;
+  // MaterialPageRoute.debugEnableFadingRoutes = true;
 
   runApp(MyApp());
 }
@@ -51,6 +51,4 @@ class _MyAppState extends State<MyApp> {
       ],
     );
   }
-
-  
 }
