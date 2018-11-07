@@ -11,9 +11,9 @@ class GoalRepository {
   GoalRepository(String uid)
       : _db = Firestore.instance,
         _analytics = FirebaseAnalytics() {
-    
+    print("goalrepo ctor: " + uid);
     _uid = uid;
-    assert(_uid != null);
+    assert(_uid != null && _uid != "");
   }
   
   final Firestore _db;

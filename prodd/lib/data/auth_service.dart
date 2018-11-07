@@ -5,20 +5,21 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 
 class AuthService {
 
-  static final _instance = AuthService._();
+  static AuthService _instance;
 
   FirebaseUser _firebaseUser;
 
-  Stream<String> get uid async* {
-    var user = await FirebaseAuth.instance.currentUser();
-    yield user?.uid;
+  String get lastUid => _firebaseUser?.uid;
 
+  Stream<String> get uid async* {
     await for(var user in FirebaseAuth.instance.onAuthStateChanged) {
+      print("auth state: " + user?.uid);
       yield user?.uid;
     }
   }
 
   factory AuthService() {
+    if(_instance == null) _instance = AuthService._();
     return _instance;
   }
 

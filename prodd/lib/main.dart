@@ -10,9 +10,6 @@ import 'package:prodd/screens/goals/add_edit_goal_screen.dart';
 import 'package:prodd/screens/goals/goal_screen.dart';
 
 void main() {
-  // hopefully can remove this later
-  // MaterialPageRoute.debugEnableFadingRoutes = true;
-
   runApp(MyApp());
 }
 
@@ -26,11 +23,9 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  final GoogleSignIn _googleSignIn = GoogleSignIn();
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-
   @override
   void initState() {
+    AuthService().uid.listen((x) => print(x));
     super.initState();
   }
 
@@ -39,8 +34,8 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       title: 'Prodd',
       routes: {
-        AppRoutes.goals: (context) => _loadGuard(),
-        AppRoutes.goalAddEdit: (context) => AddEditGoalScreen(goalRepo: GoalRepository(""))
+        AppRoutes.goals: (context) => _authGuard(),
+        AppRoutes.goalAddEdit: (context) => AddEditGoalScreen(goalRepo: GoalRepository(AuthService().lastUid))
       },
       initialRoute: AppRoutes.goals,
       color: Colors.orange[350],
@@ -53,11 +48,11 @@ class _MyAppState extends State<MyApp> {
     );
   }
 
-  Widget _loadGuard() {
+  Widget _authGuard() {
     return StreamBuilder(
       stream: AuthService().uid,
       builder: (context, AsyncSnapshot<String> snapshot) {
-        if (snapshot.data != null)
+        if (snapshot.data != null && snapshot.data != "")
           return GoalScreen(goalRepo: GoalRepository(snapshot.data));
         return Scaffold(
           appBar: AppBar(
