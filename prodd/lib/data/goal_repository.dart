@@ -3,25 +3,23 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:prodd/data/auth_service.dart';
 import 'package:prodd/models/change.dart';
 import 'package:prodd/models/goal.dart';
 
 class GoalRepository {
-  GoalRepository()
+  GoalRepository(String uid)
       : _db = Firestore.instance,
         _analytics = FirebaseAnalytics() {
-    FirebaseAuth.instance.currentUser()
-      .then((user) {
-        if(user == null) throw Exception;
-        _uid = user.uid;
-      })
-      .catchError(() => _analytics.logEvent(name: "uid_retrieval_failed"));
+    
+    _uid = uid;
+    assert(_uid != null);
   }
   
   final Firestore _db;
   final FirebaseAnalytics _analytics;
   String _uid;
-  
+
   DocumentReference get _userdoc => _db.collection(_usersCollection).document(_uid);
 
   static const _usersCollection = "users";
@@ -33,7 +31,6 @@ class GoalRepository {
                _notificationFrequencyField = "notificationFrequency",
                _estimatedDurationField = "estimatedDuration", 
                _beginNotificationsField = "beginNotifications";
-
 
   /// Returns a [Stream] of every [Goal] for user.
   Stream<List<Goal>> goalStream() {
