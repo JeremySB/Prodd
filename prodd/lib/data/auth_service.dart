@@ -35,5 +35,4 @@ class AuthService {
 
     FirebaseAuth.instance.onAuthStateChanged.listen((user) => _firebaseUser = user);
   }
-
 }
