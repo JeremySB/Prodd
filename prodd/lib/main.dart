@@ -14,8 +14,6 @@ void main() {
 }
 
 class MyApp extends StatefulWidget {
-  final GoogleSignIn _googleSignIn = GoogleSignIn();
-  final FirebaseAuth _auth = FirebaseAuth.instance;
   static final FirebaseAnalytics analytics = FirebaseAnalytics();
   static final FirebaseAnalyticsObserver observer =
       FirebaseAnalyticsObserver(analytics: analytics);
@@ -25,6 +23,9 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
   @override
   void initState() {
     AuthService().uid.listen((x) => print(x));
@@ -33,11 +34,11 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return _authGuard((context, uid) => MaterialApp(
       title: 'Prodd',
       routes: {
-        AppRoutes.goals: (context) => _authGuard(),
-        AppRoutes.goalAddEdit: (context) => AddEditGoalScreen(goalRepo: GoalRepository(AuthService().lastUid))
+        AppRoutes.goals: (context) => GoalScreen(goalRepo: GoalRepository(uid)),
+        AppRoutes.goalAddEdit: (context) => AddEditGoalScreen(goalRepo: GoalRepository(uid)),
       },
       initialRoute: AppRoutes.goals,
       color: Colors.orange[350],
@@ -47,18 +48,18 @@ class _MyAppState extends State<MyApp> {
       navigatorObservers: [
         MyApp.observer,
       ],
-    );
+    ));
   }
 
-  Widget _authGuard() {
+  Widget _authGuard(Widget builder(BuildContext context, String uid)) {
     return StreamBuilder(
       stream: AuthService().uid,
       builder: (context, AsyncSnapshot<String> snapshot) {
         if (snapshot.data != null && snapshot.data != "")
-          return GoalScreen(goalRepo: GoalRepository(snapshot.data));
+          return builder(context, snapshot.data);
         return Scaffold(
           appBar: AppBar(
-            title: Text('Authentication Error'),
+            title: Text('Loading...'),
           )
         );
       },

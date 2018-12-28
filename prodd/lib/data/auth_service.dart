@@ -1,4 +1,6 @@
 
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 
@@ -7,15 +9,10 @@ class AuthService {
 
   static AuthService _instance;
 
-  FirebaseUser _firebaseUser;
+  final Stream<String> uid;
 
-  String get lastUid => _firebaseUser?.uid;
-
-  Stream<String> get uid async* {
-    await for(var user in FirebaseAuth.instance.onAuthStateChanged) {
-      print("auth state: " + user?.uid);
-      yield user?.uid;
-    }
+  Stream<String> get uid2 { 
+    return FirebaseAuth.instance.onAuthStateChanged.map((x) => x.uid);
   }
 
   factory AuthService() {
@@ -23,16 +20,13 @@ class AuthService {
     return _instance;
   }
 
-  AuthService._() {
+  AuthService._() 
+    : uid = FirebaseAuth.instance.onAuthStateChanged.map((x) => x.uid).asBroadcastStream() 
+  {
     FirebaseAuth.instance.currentUser().then((user) {
       if(user == null) {
-        FirebaseAuth.instance.signInAnonymously().then((user2) => _firebaseUser = user)
-        .catchError((error) => print("Error" + error.error));
-      } else {
-        _firebaseUser = user;
+        FirebaseAuth.instance.signInAnonymously().catchError((error) => print("Error: " + error.error));
       }
     });
-
-    FirebaseAuth.instance.onAuthStateChanged.listen((user) => _firebaseUser = user);
   }
 }
