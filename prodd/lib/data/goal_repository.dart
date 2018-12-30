@@ -2,25 +2,22 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:prodd/data/auth_service.dart';
 import 'package:prodd/models/change.dart';
 import 'package:prodd/models/goal.dart';
 
 class GoalRepository {
-  GoalRepository(String uid)
+  GoalRepository(this.uid)
       : _db = Firestore.instance,
         _analytics = FirebaseAnalytics() {
     print("goalrepo ctor: " + uid);
-    _uid = uid;
-    assert(_uid != null && _uid != "");
+    assert(uid != null && uid != "");
   }
   
   final Firestore _db;
   final FirebaseAnalytics _analytics;
-  String _uid;
+  final String uid;
 
-  DocumentReference get _userdoc => _db.collection(_usersCollection).document(_uid);
+  DocumentReference get _userdoc => _db.collection(_usersCollection).document(uid);
 
   static const _usersCollection = "users";
   static const _goalsCollection = "goals";
