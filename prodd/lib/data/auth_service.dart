@@ -3,16 +3,26 @@ import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:flutter/material.dart';
+import 'package:rxdart/rxdart.dart';
 
 
 class AuthService {
 
   static AuthService _instance;
 
-  final Stream<String> uid;
+  BehaviorSubject<FirebaseUser> _userSubject = BehaviorSubject<FirebaseUser>();
 
-  Stream<String> get uid2 { 
-    return FirebaseAuth.instance.onAuthStateChanged.map((x) => x.uid);
+  Stream<String> get uidStream { 
+    return _userSubject.stream.map((x) => x.uid);
+  }
+
+  Stream<bool> get isAuthenticated {
+    return _userSubject.stream.map((x) => x != null);
+  }
+
+  String get uid {
+    return _userSubject.value?.uid;
   }
 
   factory AuthService() {
@@ -20,9 +30,8 @@ class AuthService {
     return _instance;
   }
 
-  AuthService._() 
-    : uid = FirebaseAuth.instance.onAuthStateChanged.map((x) => x.uid).asBroadcastStream() 
-  {
+  AuthService._() {
+    _userSubject.addStream(FirebaseAuth.instance.onAuthStateChanged);
     FirebaseAuth.instance.currentUser().then((user) {
       if(user == null) {
         FirebaseAuth.instance.signInAnonymously().catchError((error) => print("Error: " + error.error));

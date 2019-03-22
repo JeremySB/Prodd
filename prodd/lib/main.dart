@@ -18,6 +18,8 @@ class MyApp extends StatefulWidget {
   static final FirebaseAnalyticsObserver observer =
       FirebaseAnalyticsObserver(analytics: analytics);
 
+  static final GlobalKey<NavigatorState> navigatorKey = new GlobalKey<NavigatorState>();
+
   @override
   State<StatefulWidget> createState() => _MyAppState();
 }
@@ -28,17 +30,26 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void initState() {
-    AuthService().uid.listen((x) => print(x));
     super.initState();
+    AuthService().uidStream.listen((x) => print("uid" + x));
+    AuthService().isAuthenticated.listen((a) {
+      if (a) {
+        MyApp.navigatorKey.currentState.pushNamedAndRemoveUntil(AppRoutes.goals, (_) => false);
+      } else {
+        MyApp.navigatorKey.currentState.pushNamedAndRemoveUntil(AppRoutes.login, (_) => false);
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return _authGuard((context, uid) => MaterialApp(
+    
+    return MaterialApp(
       title: 'Prodd',
       routes: {
-        AppRoutes.goals: (context) => GoalScreen(goalRepo: GoalRepository(uid)),
-        AppRoutes.goalAddEdit: (context) => AddEditGoalScreen(goalRepo: GoalRepository(uid)),
+        AppRoutes.login: (context) => Scaffold(),
+        AppRoutes.goals: (context) => GoalScreen(goalRepo: GoalRepository(AuthService().uid)),
+        AppRoutes.goalAddEdit: (context) => AddEditGoalScreen(goalRepo: GoalRepository(AuthService().uid)),
       },
       initialRoute: AppRoutes.goals,
       color: Colors.orange[350],
@@ -48,21 +59,7 @@ class _MyAppState extends State<MyApp> {
       navigatorObservers: [
         MyApp.observer,
       ],
-    ));
-  }
-
-  Widget _authGuard(Widget builder(BuildContext context, String uid)) {
-    return StreamBuilder(
-      stream: AuthService().uid,
-      builder: (context, AsyncSnapshot<String> snapshot) {
-        if (snapshot.data != null && snapshot.data != "")
-          return builder(context, snapshot.data);
-        return Scaffold(
-          appBar: AppBar(
-            title: Text('Loading...'),
-          )
-        );
-      },
+      navigatorKey: MyApp.navigatorKey,
     );
   }
 }

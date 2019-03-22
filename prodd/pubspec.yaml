@@ -13,7 +13,8 @@ dependencies:
   firebase_auth: 
   firebase_analytics:  
 
-  intl: 
+  intl:
+  rxdart:
 
 
 dev_dependencies:
