@@ -22,7 +22,7 @@ class AuthService {
   }
 
   String get uid {
-    return _userSubject.value?.uid;
+    return _userSubject.value?.uid ?? "";
   }
 
   factory AuthService() {
@@ -32,10 +32,12 @@ class AuthService {
 
   AuthService._() {
     _userSubject.addStream(FirebaseAuth.instance.onAuthStateChanged);
-    FirebaseAuth.instance.currentUser().then((user) {
-      if(user == null) {
-        FirebaseAuth.instance.signInAnonymously().catchError((error) => print("Error: " + error.error));
-      }
-    });
+    // FirebaseAuth.instance.currentUser().then((user) {
+    //   if(user == null) {
+    //     FirebaseAuth.instance.signInAnonymously().catchError((error) => print("Error: " + error.error));
+    //   }
+    // });
   }
+
+  Future<void> signInAnonymously() async => await FirebaseAuth.instance.signInAnonymously();
 }

@@ -8,6 +8,7 @@ import 'package:prodd/data/goal_repository.dart';
 import 'package:prodd/routes.dart';
 import 'package:prodd/screens/goals/add_edit_goal_screen.dart';
 import 'package:prodd/screens/goals/goal_screen.dart';
+import 'package:prodd/screens/login/login_screen.dart';
 
 void main() {
   runApp(MyApp());
@@ -34,7 +35,7 @@ class _MyAppState extends State<MyApp> {
     AuthService().uidStream.listen((x) => print("uid" + x));
     AuthService().isAuthenticated.listen((a) {
       if (a) {
-        MyApp.navigatorKey.currentState.pushNamedAndRemoveUntil(AppRoutes.goals, (_) => false);
+        //MyApp.navigatorKey.currentState.pushNamedAndRemoveUntil(AppRoutes.goals, (_) => false);
       } else {
         MyApp.navigatorKey.currentState.pushNamedAndRemoveUntil(AppRoutes.login, (_) => false);
       }
@@ -47,7 +48,7 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       title: 'Prodd',
       routes: {
-        AppRoutes.login: (context) => Scaffold(),
+        AppRoutes.login: (context) => LoginScreen(),
         AppRoutes.goals: (context) => GoalScreen(goalRepo: GoalRepository(AuthService().uid)),
         AppRoutes.goalAddEdit: (context) => AddEditGoalScreen(goalRepo: GoalRepository(AuthService().uid)),
       },

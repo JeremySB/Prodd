@@ -9,8 +9,8 @@ class GoalRepository {
   GoalRepository(this.uid)
       : _db = Firestore.instance,
         _analytics = FirebaseAnalytics() {
-    print("goalrepo ctor: " + uid);
     assert(uid != null && uid != "");
+    print("goalrepo ctor: " + uid);
   }
   
   final Firestore _db;
