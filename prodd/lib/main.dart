@@ -52,7 +52,7 @@ class _MyAppState extends State<MyApp> {
         AppRoutes.goals: (context) => GoalScreen(goalRepo: GoalRepository(AuthService().uid)),
         AppRoutes.goalAddEdit: (context) => AddEditGoalScreen(goalRepo: GoalRepository(AuthService().uid)),
       },
-      initialRoute: AppRoutes.goals,
+      initialRoute: AppRoutes.login,
       color: Colors.orange[350],
       theme: ThemeData(
         primarySwatch: Colors.deepPurple,

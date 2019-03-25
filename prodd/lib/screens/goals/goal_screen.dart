@@ -19,6 +19,13 @@ class GoalScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Active Goals'),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.exit_to_app),
+            tooltip: "Logout",
+            onPressed: () => Navigator.of(context).pushReplacementNamed(AppRoutes.login),
+          )
+        ],
       ),
       body: GoalList(goalRepo: goalRepo),
       floatingActionButton: FloatingActionButton(
@@ -95,7 +102,7 @@ class _GoalListState extends State<GoalList> {
   @override
   Widget build(BuildContext context) {
     if(_loading) {
-      return Text("Loading");
+      return Center(child: CircularProgressIndicator(value: null,),);
     }
     return AnimatedList(
       key: _listKey,

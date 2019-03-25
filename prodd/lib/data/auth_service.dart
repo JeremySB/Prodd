@@ -39,5 +39,8 @@ class AuthService {
     // });
   }
 
-  Future<void> signInAnonymously() async => await FirebaseAuth.instance.signInAnonymously();
+  Future<bool> signInAnonymously() async {
+    var user = await FirebaseAuth.instance.signInAnonymously();
+    return user != null;
+  }
 }
