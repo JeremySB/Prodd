@@ -4,10 +4,18 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:rxdart/rxdart.dart';
 
 
 class AuthService {
+  final GoogleSignIn _googleSignIn = GoogleSignIn(
+    scopes: [
+      'email',
+    ],
+  );
+
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   static AuthService _instance;
 
@@ -31,16 +39,23 @@ class AuthService {
   }
 
   AuthService._() {
-    _userSubject.addStream(FirebaseAuth.instance.onAuthStateChanged);
-    // FirebaseAuth.instance.currentUser().then((user) {
-    //   if(user == null) {
-    //     FirebaseAuth.instance.signInAnonymously().catchError((error) => print("Error: " + error.error));
-    //   }
-    // });
+    _userSubject.addStream(_auth.onAuthStateChanged);
   }
 
-  Future<bool> signInAnonymously() async {
-    var user = await FirebaseAuth.instance.signInAnonymously();
-    return user != null;
+  Future<String> signInAnonymously() async {
+    final user = await _auth.signInAnonymously();
+    return user.uid;
+  }
+
+  Future<String> signInWithGoogle() async {
+    final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
+    final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+
+    final user = await _auth.signInWithGoogle(idToken: googleAuth.idToken, accessToken: googleAuth.accessToken);
+    return user.uid;
+  }
+
+  Future<void> signOut() async {
+    await _auth.signOut();
   }
 }

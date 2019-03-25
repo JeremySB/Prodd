@@ -26,16 +26,13 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  final GoogleSignIn _googleSignIn = GoogleSignIn();
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-
   @override
   void initState() {
     super.initState();
     AuthService().uidStream.listen((x) => print("uid" + x));
     AuthService().isAuthenticated.listen((a) {
       if (a) {
-        //MyApp.navigatorKey.currentState.pushNamedAndRemoveUntil(AppRoutes.goals, (_) => false);
+        MyApp.navigatorKey.currentState.pushNamedAndRemoveUntil(AppRoutes.goals, (_) => false);
       } else {
         MyApp.navigatorKey.currentState.pushNamedAndRemoveUntil(AppRoutes.login, (_) => false);
       }

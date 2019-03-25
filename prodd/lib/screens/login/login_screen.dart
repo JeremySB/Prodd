@@ -12,9 +12,12 @@ class LoginScreen extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             OutlineButton(
+              child: Text("Login With Google"),
+              onPressed: () => AuthService().signInWithGoogle().catchError((e) => print("Google signin failed $e")),
+            ),
+            OutlineButton(
               child: Text("Skip Login"),
-              onPressed: () => AuthService().signInAnonymously().then((success) =>
-                success ? Navigator.of(context).pushReplacementNamed(AppRoutes.goals) : null),
+              onPressed: () => AuthService().signInAnonymously(),
             )
           ],
         )

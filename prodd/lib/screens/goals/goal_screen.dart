@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
+import 'package:prodd/data/auth_service.dart';
 import 'package:prodd/data/goal_repository.dart';
 import 'package:prodd/models/change.dart';
 import 'package:prodd/models/goal.dart';
@@ -23,7 +24,7 @@ class GoalScreen extends StatelessWidget {
           IconButton(
             icon: Icon(Icons.exit_to_app),
             tooltip: "Logout",
-            onPressed: () => Navigator.of(context).pushReplacementNamed(AppRoutes.login),
+            onPressed: () => AuthService().signOut(),
           )
         ],
       ),
