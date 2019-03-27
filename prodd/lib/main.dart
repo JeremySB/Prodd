@@ -1,8 +1,9 @@
-import 'package:firebase_auth/firebase_auth.dart';
+
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
-import 'package:google_sign_in/google_sign_in.dart';
+import 'package:flutter/rendering.dart';
 import 'package:prodd/data/auth_service.dart';
 import 'package:prodd/data/goal_repository.dart';
 import 'package:prodd/routes.dart';
@@ -11,6 +12,15 @@ import 'package:prodd/screens/goals/goal_screen.dart';
 import 'package:prodd/screens/login/login_screen.dart';
 
 void main() {
+  Crashlytics.instance.enableInDevMode = true;
+
+  // Pass all uncaught errors to Crashlytics.
+  FlutterError.onError = (FlutterErrorDetails details) {
+    Crashlytics.instance.onError(details);
+  };
+
+  debugPaintSizeEnabled=false; 
+  
   runApp(MyApp());
 }
 
@@ -52,7 +62,11 @@ class _MyAppState extends State<MyApp> {
       initialRoute: AppRoutes.login,
       color: Colors.orange[350],
       theme: ThemeData(
+        brightness: Brightness.light,
         primarySwatch: Colors.deepPurple,
+        accentColor: Colors.orange,
+        accentColorBrightness: Brightness.light,
+        //buttonTheme: ButtonThemeData(highlightColor: Colors.purple[50])
       ),
       navigatorObservers: [
         MyApp.observer,

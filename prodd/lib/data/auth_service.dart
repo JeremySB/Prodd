@@ -44,14 +44,20 @@ class AuthService {
 
   Future<String> signInAnonymously() async {
     final user = await _auth.signInAnonymously();
+    FirebaseAnalytics().logLogin();
     return user.uid;
   }
 
   Future<String> signInWithGoogle() async {
     final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
     final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+    final AuthCredential credential = GoogleAuthProvider.getCredential(
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken,
+    );
 
-    final user = await _auth.signInWithGoogle(idToken: googleAuth.idToken, accessToken: googleAuth.accessToken);
+    final user = await _auth.signInWithCredential(credential);
+    FirebaseAnalytics().logLogin();
     return user.uid;
   }
 
