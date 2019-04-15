@@ -7,9 +7,10 @@ import 'package:flutter/rendering.dart';
 import 'package:prodd/data/auth_service.dart';
 import 'package:prodd/data/goal_repository.dart';
 import 'package:prodd/routes.dart';
-import 'package:prodd/screens/goals/add_edit_goal_screen.dart';
-import 'package:prodd/screens/goals/goal_screen.dart';
 import 'package:prodd/screens/login/login_screen.dart';
+
+import 'screens/home/goals/add_edit_goal_screen.dart';
+import 'screens/home/home_screen.dart';
 
 void main() {
   Crashlytics.instance.enableInDevMode = true;
@@ -56,7 +57,7 @@ class _MyAppState extends State<MyApp> {
       title: 'Prodd',
       routes: {
         AppRoutes.login: (context) => LoginScreen(),
-        AppRoutes.goals: (context) => GoalScreen(goalRepo: GoalRepository(AuthService().uid)),
+        AppRoutes.goals: (context) => HomeScreen(initialIndex: 0),
         AppRoutes.goalAddEdit: (context) => AddEditGoalScreen(goalRepo: GoalRepository(AuthService().uid)),
       },
       initialRoute: AppRoutes.login,
@@ -64,7 +65,7 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
         brightness: Brightness.light,
         primarySwatch: Colors.deepPurple,
-        accentColor: Colors.orange,
+        accentColor: Colors.orange[700],
         accentColorBrightness: Brightness.light,
         //buttonTheme: ButtonThemeData(highlightColor: Colors.purple[50])
       ),

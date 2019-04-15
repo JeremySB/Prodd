@@ -8,26 +8,17 @@ import 'package:prodd/data/goal_repository.dart';
 import 'package:prodd/models/change.dart';
 import 'package:prodd/models/goal.dart';
 import 'package:prodd/routes.dart';
-import 'package:prodd/screens/goals/add_edit_goal_screen.dart';
+import './add_edit_goal_screen.dart';
 
 class GoalScreen extends StatelessWidget {
-  GoalScreen({this.goalRepo});
+  GoalScreen({GoalRepository goalRepo})
+      : this.goalRepo = goalRepo ?? GoalRepository(AuthService().uid);
 
   final GoalRepository goalRepo;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Active Goals'),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.exit_to_app),
-            tooltip: "Logout",
-            onPressed: () => AuthService().signOut(),
-          )
-        ],
-      ),
       body: GoalList(goalRepo: goalRepo),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
