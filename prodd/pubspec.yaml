@@ -13,6 +13,7 @@ dependencies:
   firebase_auth: 
   firebase_analytics: 
   firebase_crashlytics: 
+  firebase_messaging: ^4.0.0+3
 
   intl:
   rxdart:

@@ -1,5 +1,6 @@
 
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
@@ -37,8 +38,13 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+  
   @override
   void initState() {
+    _firebaseMessaging.configure(onMessage: (x) async => print(x));
+    _firebaseMessaging.subscribeToTopic('dev-topic');
+
     super.initState();
     AuthService().uidStream.listen((x) => print("uid" + x));
     AuthService().isAuthenticated.listen((a) {
