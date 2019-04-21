@@ -1,6 +1,7 @@
 
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +10,7 @@ import 'package:rxdart/rxdart.dart';
 
 
 class AuthService {
+
   final GoogleSignIn _googleSignIn = GoogleSignIn(
     scopes: [
       'email',
@@ -16,13 +18,14 @@ class AuthService {
   );
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final Firestore _db = Firestore.instance;
 
   static AuthService _instance;
 
   BehaviorSubject<FirebaseUser> _userSubject = BehaviorSubject<FirebaseUser>();
 
   Stream<String> get uidStream { 
-    return _userSubject.stream.map((x) => x.uid);
+    return _userSubject.where((x) => x != null).map((x) => x.uid);
   }
 
   Stream<bool> get isAuthenticated {
@@ -30,7 +33,7 @@ class AuthService {
   }
 
   String get uid {
-    return _userSubject.value?.uid ?? "";
+    return _userSubject.value?.uid;
   }
 
   factory AuthService() {

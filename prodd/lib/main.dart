@@ -10,6 +10,7 @@ import 'package:prodd/data/goal_repository.dart';
 import 'package:prodd/routes.dart';
 import 'package:prodd/screens/login/login_screen.dart';
 
+import 'data/notification_service.dart';
 import 'screens/home/goals/add_edit_goal_screen.dart';
 import 'screens/home/home_screen.dart';
 
@@ -54,11 +55,11 @@ class _MyAppState extends State<MyApp> {
         MyApp.navigatorKey.currentState.pushNamedAndRemoveUntil(AppRoutes.login, (_) => false);
       }
     });
+    NotificationService();
   }
 
   @override
   Widget build(BuildContext context) {
-    
     return MaterialApp(
       title: 'Prodd',
       routes: {
